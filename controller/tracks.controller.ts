@@ -1,4 +1,6 @@
 import fs from "fs";
+import { dirname } from "path";
+import multer from 'multer'
 import { db } from "./conection.controller.js";
 
 // Promisify the query function
@@ -33,23 +35,21 @@ export async function playTrack(req: any | Request, res: any | Response) {
   const idOfTrack: string = req.params.id;
   const realIdOfTrack: any = await searchInDb(Number(idOfTrack));
   const realIdOfTrackId = realIdOfTrack.id_cancion;
-
+  const currentDir = dirname("../Streaming-music-app/persistencia/1.mp3");
   if (!realIdOfTrack) {
     res.status(404).send({ message: "Not found", status: 404 });
   } else {
-    const goToTrack: string = "../persistencia/" + idOfTrack +".mp3";
+    const goToTrack: string = currentDir + "/" + idOfTrack + ".mp3";
     console.log(goToTrack);
 
     try {
-      console.log('pass1')
-
       if (!fs.existsSync(goToTrack)) {
         res.status(404).send({ message: "File not found", status: 404 });
         return;
       }
-      
+
       const stat = fs.statSync(goToTrack);
-      console.log(stat)
+      console.log(stat);
 
       res.writeHead(200, {
         "Content-Type": "audio/mpeg",
@@ -75,3 +75,4 @@ export async function playTrack(req: any | Request, res: any | Response) {
     }
   }
 }
+

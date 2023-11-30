@@ -8,8 +8,9 @@ export const storage: StorageEngine = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: (req: Request | any, file: Express.Multer.File, cb) => {
-    // Nombre del archivo en el servidor
-    cb(null, file.fieldname);
+    // Nombre personalizado del archivo en el servidor
+    const nombreArchivo = req.body.nombreArchivo || file.originalname;
+    cb(null, nombreArchivo);
   },
 });
 

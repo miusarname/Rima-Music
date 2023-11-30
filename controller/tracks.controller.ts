@@ -1,6 +1,7 @@
 import fs from "fs";
-import { dirname } from "path";
-import multer from 'multer'
+import { upload } from "./Storage.controller.js";
+import { dirname,resolve } from "path";
+import { Request, Response } from "express";
 import { db } from "./conection.controller.js";
 
 // Promisify the query function
@@ -30,8 +31,29 @@ const searchInDb = async (publicId: number) => {
   }
 };
 
+const addNewTrack = async (content: any) => {
+  console.log(content.title);
+  try {
+    const resultados = await queryAsync(
+      "INSERT INTO Canciones (titulo, id_artista, id_album, duracion, id_public, id_genero) VALUES (?, ?, ?, ?, ?, ?)",
+      [
+        content.title,
+        content.artist_id,
+        content.album_id,
+        content.sec_duration,
+        content.gender_id,
+        content.artist_id,
+      ]
+    );
+    return resultados;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 // Router functions
-export async function playTrack(req: any | Request, res: any | Response) {
+export async function playTrack(req: Request, res: Response): Promise<void> {
   const idOfTrack: string = req.params.id;
   const realIdOfTrack: any = await searchInDb(Number(idOfTrack));
   const realIdOfTrackId = realIdOfTrack.id_cancion;
@@ -76,3 +98,13 @@ export async function playTrack(req: any | Request, res: any | Response) {
   }
 }
 
+export async function uploadTrack(req: Request, res: Response) {
+  const resp: any = await addNewTrack(req.body);
+  const idToChange: number = resp.insertId + 1;
+  
+  // Definir el nombre del archivo
+  const nombreArchivo = `${idToChange}.mp3`;
+
+  // Agregar el nombre del archivo a la solicitud (req) si es necesario
+  req.body.nombreArchivo = nombreArchivo;
+}

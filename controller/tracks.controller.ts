@@ -1,6 +1,6 @@
 import fs from "fs";
 import { upload } from "./Storage.controller.js";
-import { dirname,resolve } from "path";
+import { dirname, resolve } from "path";
 import { Request, Response } from "express";
 import { db } from "./conection.controller.js";
 
@@ -52,6 +52,37 @@ const addNewTrack = async (content: any) => {
   }
 };
 
+const removeTrack  = async (id: number) => {
+  try {
+    const resultados = await queryAsync("DELETE FROM Canciones WHERE id = ?", [
+      id,
+    ]);
+    return resultados;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const updateTrackInfo = async (id: number, datos: Record<string, any>): Promise<void> => {
+  const claves = Object.keys(datos);
+  const valores = Object.values(datos);
+
+  const asignaciones = claves.map((clave) => `${clave} = ?`).join(', ');
+
+  const consulta = `UPDATE Canciones SET ${asignaciones} WHERE id = ?`;
+
+  const parametros = [...valores, id];
+
+  try {
+    const resultados = await queryAsync(consulta, parametros);
+    console.log('Fila actualizada correctamente');
+  } catch (error) {
+    console.error('Error al actualizar la fila:', error);
+  }
+};
+
+
 // Router functions
 export async function playTrack(req: Request, res: Response): Promise<void> {
   const idOfTrack: string = req.params.id;
@@ -101,10 +132,32 @@ export async function playTrack(req: Request, res: Response): Promise<void> {
 export async function uploadTrack(req: Request, res: Response) {
   const resp: any = await addNewTrack(req.body);
   const idToChange: number = resp.insertId + 1;
-  
+
   // Definir el nombre del archivo
   const nombreArchivo = `${idToChange}.mp3`;
 
   // Agregar el nombre del archivo a la solicitud (req) si es necesario
   req.body.nombreArchivo = nombreArchivo;
+}
+
+export async function DeleteTrack(req:Request, res: Response) {
+  let idToDelete: number = req.body.id;
+  try {
+  var result = await removeTrack(idToDelete);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+
+  res.status(410).json({status : 410, data : result});
+}
+
+export async function updateTrack(req:Request, res: Response) {
+  let idToUpdate: number = req.body.id;
+  try {
+    let result = updateTrackInfo(idToUpdate,req.body)
+  } catch (error:any) {
+    console.error(error);
+    return null;
+  }
 }

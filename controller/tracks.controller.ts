@@ -64,19 +64,20 @@ const removeTrack  = async (id: number) => {
   }
 };
 
-const updateTrackInfo = async (id: number, datos: Record<string, any>): Promise<void> => {
+const updateTrackInfo = async (id: number, datos: Record<string, any>): Promise<any> => {
   const claves = Object.keys(datos);
   const valores = Object.values(datos);
 
   const asignaciones = claves.map((clave) => `${clave} = ?`).join(', ');
 
-  const consulta = `UPDATE Canciones SET ${asignaciones} WHERE id = ?`;
+  const consulta = `UPDATE Canciones SET ${asignaciones} WHERE id_cancion = ?`;
 
   const parametros = [...valores, id];
 
   try {
     const resultados = await queryAsync(consulta, parametros);
     console.log('Fila actualizada correctamente');
+    return resultados
   } catch (error) {
     console.error('Error al actualizar la fila:', error);
   }
@@ -152,12 +153,15 @@ export async function DeleteTrack(req:Request, res: Response) {
   res.status(410).json({status : 410, data : result});
 }
 
-export async function updateTrack(req:Request, res: Response) {
-  let idToUpdate: number = req.body.id;
+export async function updateTrack(req: Request, res: Response) {
+  // Obtener el id y eliminarlo del objeto req.body
+  let { id, ...trackInfo } = req.body;
+
   try {
-    let result = updateTrackInfo(idToUpdate,req.body)
-  } catch (error:any) {
+    let result = updateTrackInfo(id, trackInfo);
+    res.status(200).json({status : 200, data : result});
+  } catch (error: any) {
     console.error(error);
-    return null;
+
   }
 }

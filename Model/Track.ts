@@ -2,77 +2,77 @@ import { Expose, Type, Transform } from "class-transformer";
 import { IsDefined, IsNumber, IsString, IsDate } from "class-validator";
 
 export class Track {
-  @Expose({ name: "titulo" })
+  @Expose({ name: "title" })
   @IsString()
   @IsDefined({
     message: () => {
       throw {
         status: 422,
-        message: "El parametro es obligatorio -> titulo",
+        message: "El parametro es obligatorio -> title",
       };
     },
   })
-  title: string;
+  titulo: string;
 
-  @Expose({ name: "id_artista" })
+  @Expose({ name: "artist_id" })
   @IsNumber()
   @IsDefined({
     message: () => {
       throw {
         status: 422,
-        message: "El parametro es obligatorio -> id_artista",
+        message: "El parametro es obligatorio -> artist_id",
       };
     },
   })
-  artist_id: number;
+  id_artista: number;
 
-  @Expose({ name: "Id_album" })
+  @Expose({ name: "album_id" })
   @IsNumber()
   @IsDefined({
     message: () => {
       throw {
         status: 422,
-        message: "El parametro es obligatorio -> Id_album",
+        message: "El parametro es obligatorio -> album_id",
       };
     },
   })
-  album_id: number;
+  id_album: number;
 
-  @Expose({ name: "seg_duracion" })
+  @Expose({ name: "sec_duration" })
   @IsNumber()
   @IsDefined({
     message: () => {
       throw {
         status: 422,
-        message: "El parametro es obligatorio -> seg_duracion",
+        message: "El parametro es obligatorio -> sec_duration",
       };
     },
   })
-  sec_duration: number;
+  duracion: number;
 
-  @Expose({ name: "id_genero" })
+  @Expose({ name: "gender_id" })
   @IsNumber()
   @IsDefined({
     message: () => {
       throw {
         status: 422,
-        message: "El parametro es obligatorio -> id_genero",
+        message: "El parametro es obligatorio -> gender_id",
       };
     },
   })
-  gender_id: number;
+  id_genero: number;
 
   constructor(
-    titulo: string,
-    id_artista: number,
-    seg_duracion: number,
-    id_album: number,
-    id_genero: number
+    title: string,
+    artist_id: number,
+    sec_duration: number,
+    album_id: number,
+    gender_id: number
   ) {
-    this.title = titulo;
-    this.album_id = id_album;
-    this.sec_duration = seg_duracion;
-    this.gender_id = id_genero;
-    this.artist_id = id_artista;
+    this.titulo = title;
+    this.id_album = album_id;
+    this.duracion = sec_duration;
+    this.id_genero = gender_id;
+    this.id_artista = artist_id;
   }
 }

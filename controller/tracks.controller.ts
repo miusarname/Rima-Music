@@ -1,21 +1,7 @@
 import fs from "fs";
-import { upload } from "./Storage.controller.js";
-import { dirname, resolve } from "path";
+import { dirname } from "path";
 import { Request, Response } from "express";
-import { db } from "./conection.controller.js";
-
-// Promisify the query function
-const queryAsync = (sql: string, values: any) => {
-  return new Promise<Array<object>>((resolve, reject) => {
-    db.query(sql, values, (err: any, results: any) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-};
+import { queryAsync } from "./conection.controller.js";
 
 // Logic
 const searchInDb = async (publicId: number) => {
@@ -52,7 +38,7 @@ const addNewTrack = async (content: any) => {
   }
 };
 
-const removeTrack  = async (id: number) => {
+const removeTrack = async (id: number) => {
   try {
     const resultados = await queryAsync("DELETE FROM Canciones WHERE id = ?", [
       id,
@@ -64,11 +50,14 @@ const removeTrack  = async (id: number) => {
   }
 };
 
-const updateTrackInfo = async (id: number, datos: Record<string, any>): Promise<any> => {
+const updateTrackInfo = async (
+  id: number,
+  datos: Record<string, any>
+): Promise<any> => {
   const claves = Object.keys(datos);
   const valores = Object.values(datos);
 
-  const asignaciones = claves.map((clave) => `${clave} = ?`).join(', ');
+  const asignaciones = claves.map((clave) => `${clave} = ?`).join(", ");
 
   const consulta = `UPDATE Canciones SET ${asignaciones} WHERE id_cancion = ?`;
 
@@ -76,13 +65,12 @@ const updateTrackInfo = async (id: number, datos: Record<string, any>): Promise<
 
   try {
     const resultados = await queryAsync(consulta, parametros);
-    console.log('Fila actualizada correctamente');
-    return resultados
+    console.log("Fila actualizada correctamente");
+    return resultados;
   } catch (error) {
-    console.error('Error al actualizar la fila:', error);
+    console.error("Error al actualizar la fila:", error);
   }
 };
-
 
 // Router functions
 export async function playTrack(req: Request, res: Response): Promise<void> {
@@ -141,16 +129,16 @@ export async function uploadTrack(req: Request, res: Response) {
   req.body.nombreArchivo = nombreArchivo;
 }
 
-export async function DeleteTrack(req:Request, res: Response) {
+export async function DeleteTrack(req: Request, res: Response) {
   let idToDelete: number = req.body.id;
   try {
-  var result = await removeTrack(idToDelete);
+    var result = await removeTrack(idToDelete);
   } catch (error) {
     console.error(error);
     return null;
   }
 
-  res.status(410).json({status : 410, data : result});
+  res.status(410).json({ status: 410, data: result });
 }
 
 export async function updateTrack(req: Request, res: Response) {
@@ -159,9 +147,8 @@ export async function updateTrack(req: Request, res: Response) {
 
   try {
     let result = updateTrackInfo(id, trackInfo);
-    res.status(200).json({status : 200, data : result});
+    res.status(200).json({ status: 200, data: result });
   } catch (error: any) {
     console.error(error);
-
   }
 }

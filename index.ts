@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import { storage,upload } from "./controller/Storage.controller.js";
 import { tracks } from "./controller/routes/tracks.routes.js";
+import { artist } from "./controller/routes/artist.routes.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from "dotenv";
@@ -20,6 +21,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/tracks", tracks);
+app.use("/artist", artist);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

@@ -4,7 +4,7 @@ import { Artist } from "../Model/Artistis.js";
 
 // logic
 const createArtist = async (content: Artist | any): Promise<Object | null> => {
-  console.log(content);
+  console.log(content, "contente");
   try {
     const result = await queryAsync(
       `INSERT INTO Artistas (nombre) VALUES (?)`,
@@ -17,9 +17,9 @@ const createArtist = async (content: Artist | any): Promise<Object | null> => {
   }
 };
 
-const selectArtists = async (): Promise<Object | null> => {
+const selectArtists = async (): Promise<Array<Object> | null> => {
   try {
-    const result = await queryAsync(`SELECT * FROM Artistas`, []);
+    const result = await queryAsync(`SELECT * FROM artistas`, []);
     return result;
   } catch (error: any) {
     console.error(error);
@@ -66,8 +66,7 @@ const deleteArtist = async (id: number): Promise<object | null> => {
 
 export async function getArtists(req: Request, res: Response): Promise<Object> {
   try {
-    const Artists = selectArtists();
-
+    const Artists = await selectArtists();
     res.status(200).json({ status: 200, data: Artists });
     return { status: 200, data: Artists };
   } catch (error) {
@@ -90,10 +89,10 @@ export async function postArtist(req: Request, res: Response): Promise<Object> {
   }
 }
 
-export async function putArtist(req: Request, res: Response):Promise<Object> {
+export async function putArtist(req: Request |any, res: Response): Promise<Object> {
   try {
     const { id, ...ArtistInfo } = req.body;
-
+    console.log(req.body)
     const result = await updateArtist(id, ArtistInfo);
 
     res.status(200).json({ status: 200, data: result });
@@ -105,13 +104,16 @@ export async function putArtist(req: Request, res: Response):Promise<Object> {
   }
 }
 
-export async function deleteArtista(req: Request, res: Response): Promise<Object> {
-    try {
-        const deleteArtistResult = await deleteArtist(req.body.id);
-        res.status(200).json({ status: 200, data: deleteArtist});
-        return { status: 200, data: deleteArtistResult};
-    } catch (error:any) {
-        console.error(error);
-        return { status: 500, data: error };
-    }
+export async function deleteArtista(
+  req: Request,
+  res: Response
+): Promise<Object> {
+  try {
+    const deleteArtistResult = await deleteArtist(req.body.id);
+    res.status(200).json({ status: 200, data: deleteArtist });
+    return { status: 200, data: deleteArtistResult };
+  } catch (error: any) {
+    console.error(error);
+    return { status: 500, data: error };
+  }
 }

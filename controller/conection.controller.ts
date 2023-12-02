@@ -5,7 +5,7 @@ import { Connection } from "mysql2/typings/mysql/lib/Connection";
 dotenv.config();
 console.log(process.env.DB_USER,'db')
 
-export const db: Connection = mysql.createConnection({
+const db: Connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -19,3 +19,15 @@ db.connect((err) => {
   }
   console.log("Conexión exitosa a la base de datos");
 });
+
+export const queryAsync = (sql: string, values: Array<any> ) => {
+  return new Promise<Array<object>>((resolve, reject) => {
+    db.query(sql, values, (err: any, results: any) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};

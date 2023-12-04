@@ -8,7 +8,14 @@ export interface Artist {
 export class Artists {
   @Expose({ name: "name" })
   @IsString()
-  @IsDefined()
+  @IsDefined({
+    message: () => {
+      throw {
+        status: 422,
+        message: "El parametro es obligatorio -> title",
+      };
+    },
+  })
   nombre: string;
 
   constructor(name: string) {

@@ -7,7 +7,7 @@ export interface AlbumT {
     anio : number;
   }
 
-class Album {
+export class Album {
   @Expose({ name: "name_album" })
   @IsString()
   @IsDefined({
@@ -44,6 +44,31 @@ class Album {
     };
   },
 })
+anio : number;
+
+  constructor(
+    name_album: string,
+    artist_id: number,
+    age : number
+  ) {
+    this.nombre = name_album;
+    this.id_artista = artist_id;
+    this.anio = age;
+    
+  }
+}
+
+export class AlbumP implements AlbumT {
+  @Expose({ name: "name_album" })
+  @IsString()
+  nombre: string;
+
+@Expose({ name: "artist_id" })
+@IsNumber()
+  id_artista: number;
+
+@Expose({ name: "age" })
+@IsNumber()
 anio : number;
 
   constructor(

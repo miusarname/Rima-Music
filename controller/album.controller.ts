@@ -79,7 +79,7 @@ const selectAlbum = async (id: number) : Promise<Array<Object> | null> => {
 
 // Router functions
 
-export async function getAlbum(req: Request, res: Response) : Promise<any> {
+export async function getAlbums(req: Request, res: Response) : Promise<any> {
     try {
         const resp = await selectArtists();
     res.status(200).json({ status: 200, data: resp });
@@ -130,7 +130,7 @@ export async function postAlbum(req: Request, res:Response): Promise<any> {
   }
 }
 
-export async function getArtist(req: Request, res:Response): Promise<any> {
+export async function getAlbum(req: Request, res:Response): Promise<any> {
   try {
     const { id } = req.body;
     const result = await selectAlbum(id);

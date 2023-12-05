@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { plainToClass } from "class-transformer";
-import { Artists } from "../../Model/Artistis.js";
+import { Artists } from "../../Model/Artists.js";
 import { validate } from "class-validator";
 
 export var data: object;

@@ -1,6 +1,6 @@
 import { queryAsync } from "./conection.controller.js";
 import { Request, Response } from "express";
-import { Artist } from "../Model/Artistis.js";
+import { Artist } from "../Model/Artists.js";
 
 // logic
 const createArtist = async (content: Artist | any): Promise<Object | null> => {

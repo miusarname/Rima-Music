@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { deleteArtista,getArtists,postArtist,putArtist } from "../artists.controller.js";
-import { validateArtist } from "../helpers/artist.DTO.js";
+import { validateArtist } from "../storage/artist.DTO.js";
 
 export const artist: Router = Router();
 

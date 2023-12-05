@@ -40,7 +40,7 @@ const addNewTrack = async (content: any) => {
 
 const removeTrack = async (id: number) => {
   try {
-    const resultados = await queryAsync("DELETE FROM Canciones WHERE id = ?", [
+    const resultados = await queryAsync("DELETE FROM Canciones WHERE id_cancion = ?", [
       id,
     ]);
     return resultados;

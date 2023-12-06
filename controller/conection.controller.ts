@@ -2,7 +2,7 @@ import mysql from "mysql2";
 import dotenv from "dotenv";
 import { Connection } from "mysql2/typings/mysql/lib/Connection";
 
-dotenv.config();
+dotenv.config({path:"../"});
 console.log(process.env.DB_USER,'db')
 
 const db: Connection = mysql.createConnection({
